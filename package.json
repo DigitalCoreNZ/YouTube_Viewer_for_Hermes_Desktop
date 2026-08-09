@@ -1,0 +1,50 @@
+{
+  "name": "@hermes-desktop/youtube-viewer",
+  "version": "0.5.1",
+  "description": "YouTube Viewer for Hermes Desktop — search, transcripts, video info, channel browsing, playlists, download, and clip extraction",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "youtube-viewer-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "skills",
+    "scripts",
+    "README_v0.5.1.md"
+  ],
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Hermes Desktop Community",
+    "url": "https://github.com/hermes-desktop/youtube-viewer"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hermes-desktop/youtube-viewer.git"
+  },
+  "homepage": "https://github.com/hermes-desktop/youtube-viewer",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.28.0",
+    "ffmpeg-static": "^5.3.0",
+    "youtube-transcript-plus": "^1.0.0",
+    "youtubei.js": "^17.0.1",
+    "ytdlp-nodejs": "^3.4.4",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  },
+  "optionalDependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}
