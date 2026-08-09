@@ -1,6 +1,34 @@
-# YouTube Viewer for Hermes Desktop — v0.5.1
+---
+title: YouTube Viewer for Hermes Desktop
+subtitle: An Agent with Video Watching Abilities
+author: Hermes Agent
+revnumber: v0.5.1
+doctype: book
+cDay: Monday
+cDate: 10
+cMonth: 08
+cYear: 2026
+uDay: Monday
+uDate: 10
+uMonth: 08
+uYear: 2026
+toc: true
+toclevels: 6
+sectnums: true
+sectnumlevels: 6
+icons: font
+keywords: (pending)
+summary: (pending)
+description: (pending)
+license: Apache 2.0
+status: Complete
+attributions: Not applicable
+copyright: © Copyright 2020-2026 DigitalCoreNZ. All rights reserved.
+---
 
-> **A Hermes Agent skill that gives Hermes Desktop the ability to search, browse, watch transcripts of, download, and clip YouTube videos.**
+# YouTube Viewer for Hermes Desktop
+
+> **An Agent with Video Watching Abilities**
 
 ---
 
@@ -405,4 +433,31 @@ The next version (v0.5.2) should prioritize adding visual analysis by integratin
 
 ---
 
-*Document version: v0.5.1 — August 2026*
+## Document Details: Title (pending, from frontmatter metadata)
+
+**Document Subtitle:** (pending, from frontmatter metadata)
+
+**Document Version:** (pending, from frontmatter metadata)
+
+**Document Author(s):** (pending, from frontmatter metadata)
+
+**Document Attributions:** (pending, from frontmatter metadata)
+
+**Document Creation Date:** (pending, from frontmatter metadata)
+
+**Last Update:** (pending, from frontmatter metadata)
+
+**License:** (pending, from frontmatter metadata)
+
+© Copyright 2020-2026 DigitalCoreNZ. All rights reserved.
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
