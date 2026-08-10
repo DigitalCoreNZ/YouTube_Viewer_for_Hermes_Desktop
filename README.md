@@ -1,31 +1,3 @@
----
-title: YouTube Viewer for Hermes Desktop
-subtitle: An Agent with Video Watching Abilities
-author: Hermes Agent, Brian King
-revnumber: v0.5.1
-doctype: book
-cDay: Monday
-cDate: 10
-cMonth: 08
-cYear: 2026
-uDay: Monday
-uDate: 10
-uMonth: 08
-uYear: 2026
-toc: true
-toclevels: 6
-sectnums: true
-sectnumlevels: 6
-icons: font
-keywords: YouTube, MCP, Model Context Protocol, Hermes Desktop, Hermes Agent, video viewer, AI agent, transcript extraction, video download, clip extraction, InnerTube API, cookie authentication, Chrome CDP, yt-dlp, ffmpeg, Node.js
-summary: A Hermes Agent SKILL that bridges the YouTube capability gap for Hermes Desktop — search videos, extract transcripts, browse channels, download content, and clip highlights via MCP (Model Context Protocol). Supports anonymous and personalized modes with Chrome CDP cookie authentication.
-description: A comprehensive documentation and reference for the YouTube Viewer for Hermes Desktop — an MCP server plugin that enables Hermes Agent to search, watch, analyze, download, and clip YouTube content. Covers installation, authentication (anonymous and personalized modes), architecture analysis (InnerTube API, cookie auth via Chrome CDP, yt-dlp/ffmpeg download engine), known failures, and recommended improvements for v0.5.2.
-license: Apache 2.0
-status: Complete
-attributions: YouTube for AI Agents by JCodesMore (Apache 2.0), Hermes Agent SKILLS Hub (Nous Research), InnerTube API (youtubei.js), youtube-transcript-plus, ytdlp-nodejs / yt-dlp, ffmpeg-static / ffmpeg, Puppeteer-core / Chrome DevTools Protocol, @modelcontextprotocol/sdk, arXiv
-copyright: © Copyright 2020-2026 DigitalCoreNZ. All rights reserved.
----
-
 # YouTube Viewer for Hermes Desktop
 
 > **An Agent with Video Watching Abilities**
@@ -96,10 +68,14 @@ The utility uses `youtubei.js` for YouTube API access, `youtube-transcript-plus`
 
 ```bash
 cd ~/Downloads/YouTube_Viewer_for_Hermes_Desktop
-npm install youtubei.js youtube-transcript-plus ytdlp-nodejs ffmpeg-static
+npm install youtubei.js@latest ytdlp-nodejs ffmpeg-static
 ```
 
-==NOTE: This installs all of the required packages, and post-install scripts, that automatically download the yt-dlp and ffmpeg binaries.==
+==NOTE: If I get ENOTSUP errors, I can try globally installing the NPM dependencies, i.e. `npm install -g youtubei.js@latest ytdlp-nodejs ffmpeg-static`. Failing that, I have a post that describes a couple of steps for me to take to _possibly_ resolve the permissions issue.==
+
+* I install the `youtube-transcript-plus` Chrome extension into the Brave Web Browser.
+
+==NOTE: These are the packages, and post-install scripts, that this repo needs to run.==
 
 ### Step 3 — Load the Skill into Hermes Agent
 
@@ -110,7 +86,7 @@ The skill file lives at `~/Downloads/YouTube_Viewer_for_Hermes_Desktop/skills/yo
 ```bash
 hermes skills add \
   --path ~/Downloads/YouTube_Viewer_for_Hermes_Desktop/skills/youtube-viewer/SKILL.md \
-  --name /yt
+  --name yt
 ```
 
 Or, if my Hermes Agent config supports it, I can (-s)ymlink (symbolic link) the SKILL into the SKILLS directory:
@@ -506,3 +482,31 @@ The next version (v0.5.2) should prioritize adding visual analysis by integratin
 <br>
 <br>
 <br>
+---
+title: YouTube Viewer for Hermes Desktop
+subtitle: An Agent with Video Watching Abilities
+author: Hermes Agent, Brian King
+revnumber: v0.5.1
+doctype: book
+cDay: Monday
+cDate: 10
+cMonth: 08
+cYear: 2026
+uDay: Monday
+uDate: 10
+uMonth: 08
+uYear: 2026
+toc: true
+toclevels: 6
+sectnums: true
+sectnumlevels: 6
+icons: font
+keywords: YouTube, MCP, Model Context Protocol, Hermes Desktop, Hermes Agent, video viewer, AI agent, transcript extraction, video download, clip extraction, InnerTube API, cookie authentication, Chrome CDP, yt-dlp, ffmpeg, Node.js
+summary: A Hermes Agent SKILL that bridges the YouTube capability gap for Hermes Desktop — search videos, extract transcripts, browse channels, download content, and clip highlights via MCP (Model Context Protocol). Supports anonymous and personalized modes with Chrome CDP cookie authentication.
+description: A comprehensive documentation and reference for the YouTube Viewer for Hermes Desktop — an MCP server plugin that enables Hermes Agent to search, watch, analyze, download, and clip YouTube content. Covers installation, authentication (anonymous and personalized modes), architecture analysis (InnerTube API, cookie auth via Chrome CDP, yt-dlp/ffmpeg download engine), known failures, and recommended improvements for v0.5.2.
+license: Apache 2.0
+status: Complete
+attributions: YouTube for AI Agents by JCodesMore (Apache 2.0), Hermes Agent SKILLS Hub (Nous Research), InnerTube API (youtubei.js), youtube-transcript-plus, ytdlp-nodejs / yt-dlp, ffmpeg-static / ffmpeg, Puppeteer-core / Chrome DevTools Protocol, @modelcontextprotocol/sdk, arXiv
+copyright: © Copyright 2020-2026 DigitalCoreNZ. All rights reserved.
+---
+
