@@ -7,11 +7,14 @@ export const channelInfoInputSchema = {
 
 export async function handleChannelInfo(args: { channelUrl: string }) {
   const info = await getChannelInfo(args.channelUrl);
+  const serialized = JSON.stringify(info, null, 2);
 
   return {
+    resultType: 'complete' as const,
     content: [{
       type: 'text' as const,
-      text: JSON.stringify(info, null, 2),
+      text: serialized,
     }],
+    structuredContent: info as unknown as Record<string, unknown>,
   };
 }

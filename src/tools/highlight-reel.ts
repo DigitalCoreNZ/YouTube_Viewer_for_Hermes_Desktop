@@ -26,16 +26,21 @@ export async function handleHighlightReel(args: HighlightReelArgs) {
   const fileSize = formatFileSize(statSync(outputPath).size);
   const duration = await getVideoDuration(outputPath);
 
+  const payload = {
+    filePath: outputPath,
+    duration: formatSeconds(duration),
+    durationSeconds: duration,
+    fileSize,
+    clipCount: args.clips.length,
+  };
+  const serialized = JSON.stringify(payload, null, 2);
+
   return {
+    resultType: 'complete' as const,
     content: [{
       type: 'text' as const,
-      text: JSON.stringify({
-        filePath: outputPath,
-        duration: formatSeconds(duration),
-        durationSeconds: duration,
-        fileSize,
-        clipCount: args.clips.length,
-      }, null, 2),
+      text: serialized,
     }],
+    structuredContent: payload as Record<string, unknown>,
   };
 }

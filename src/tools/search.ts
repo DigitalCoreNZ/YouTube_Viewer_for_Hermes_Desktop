@@ -41,10 +41,15 @@ export async function handleSearch(args: SearchArgs) {
     sortBy,
   });
 
+  const payload = { results, mode, query: args.query };
+  const serialized = JSON.stringify(payload, null, 2);
+
   return {
+    resultType: 'complete' as const,
     content: [{
       type: 'text' as const,
-      text: JSON.stringify({ results, mode, query: args.query }, null, 2),
+      text: serialized,
     }],
+    structuredContent: payload as Record<string, unknown>,
   };
 }

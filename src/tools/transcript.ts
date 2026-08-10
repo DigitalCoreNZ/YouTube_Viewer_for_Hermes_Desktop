@@ -34,8 +34,10 @@ export async function handleTranscript(args: TranscriptArgs) {
 
   if ('error' in result) {
     return {
+      resultType: 'complete' as const,
       content: [{ type: 'text' as const, text: JSON.stringify(result) }],
       isError: true,
+      structuredContent: result as unknown as Record<string, unknown>,
     };
   }
 
@@ -71,7 +73,7 @@ export async function handleTranscript(args: TranscriptArgs) {
   }
 
   const format = args.format ?? 'both';
-  const response: Record<string, unknown> = {
+  const payload: Record<string, unknown> = {
     videoId: args.videoId,
     title,
     channel,
@@ -80,16 +82,20 @@ export async function handleTranscript(args: TranscriptArgs) {
   };
 
   if (format === 'segments' || format === 'both') {
-    response.segments = segments;
+    payload.segments = segments;
   }
   if (format === 'text' || format === 'both') {
-    response.fullText = fullText;
+    payload.fullText = fullText;
   }
 
+  const serialized = JSON.stringify(payload, null, 2);
+
   return {
+    resultType: 'complete' as const,
     content: [{
       type: 'text' as const,
-      text: JSON.stringify(response, null, 2),
+      text: serialized,
     }],
+    structuredContent: payload as Record<string, unknown>,
   };
 }

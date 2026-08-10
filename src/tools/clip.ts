@@ -43,10 +43,14 @@ export async function handleClip(args: ClipArgs) {
     highlightReel: args.highlightReel,
   });
 
+  const serialized = JSON.stringify(result, null, 2);
+
   return {
+    resultType: 'complete' as const,
     content: [{
       type: 'text' as const,
-      text: JSON.stringify(result, null, 2),
+      text: serialized,
     }],
+    structuredContent: result as unknown as Record<string, unknown>,
   };
 }

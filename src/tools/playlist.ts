@@ -19,11 +19,14 @@ export async function handlePlaylist(args: PlaylistArgs) {
   const limit = args.limit ?? config.playlist.defaultLimit;
 
   const info = await getPlaylist(args.playlistId, limit);
+  const serialized = JSON.stringify(info, null, 2);
 
   return {
+    resultType: 'complete' as const,
     content: [{
       type: 'text' as const,
-      text: JSON.stringify(info, null, 2),
+      text: serialized,
     }],
+    structuredContent: info as unknown as Record<string, unknown>,
   };
 }
