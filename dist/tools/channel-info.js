@@ -5,11 +5,14 @@ export const channelInfoInputSchema = {
 };
 export async function handleChannelInfo(args) {
     const info = await getChannelInfo(args.channelUrl);
+    const serialized = JSON.stringify(info, null, 2);
     return {
+        resultType: 'complete',
         content: [{
                 type: 'text',
-                text: JSON.stringify(info, null, 2),
+                text: serialized,
             }],
+        structuredContent: info,
     };
 }
 //# sourceMappingURL=channel-info.js.map

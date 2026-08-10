@@ -20,8 +20,10 @@ export async function handleTranscript(args) {
     const result = await getTranscript(args.videoId, args.language);
     if ('error' in result) {
         return {
+            resultType: 'complete',
             content: [{ type: 'text', text: JSON.stringify(result) }],
             isError: true,
+            structuredContent: result,
         };
     }
     let segments = result.segments;
@@ -52,7 +54,7 @@ export async function handleTranscript(args) {
         // Non-critical enrichment
     }
     const format = args.format ?? 'both';
-    const response = {
+    const payload = {
         videoId: args.videoId,
         title,
         channel,
@@ -60,16 +62,19 @@ export async function handleTranscript(args) {
         segmentCount: segments.length,
     };
     if (format === 'segments' || format === 'both') {
-        response.segments = segments;
+        payload.segments = segments;
     }
     if (format === 'text' || format === 'both') {
-        response.fullText = fullText;
+        payload.fullText = fullText;
     }
+    const serialized = JSON.stringify(payload, null, 2);
     return {
+        resultType: 'complete',
         content: [{
                 type: 'text',
-                text: JSON.stringify(response, null, 2),
+                text: serialized,
             }],
+        structuredContent: payload,
     };
 }
 //# sourceMappingURL=transcript.js.map

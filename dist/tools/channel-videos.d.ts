@@ -10,10 +10,12 @@ interface ChannelVideosArgs {
     sort?: string;
 }
 export declare function handleChannelVideos(args: ChannelVideosArgs): Promise<{
+    resultType: "complete";
     content: {
         type: "text";
         text: string;
     }[];
+    structuredContent: Record<string, unknown>;
 }>;
 export {};
 //# sourceMappingURL=channel-videos.d.ts.map

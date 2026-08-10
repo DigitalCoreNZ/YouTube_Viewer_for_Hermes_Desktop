@@ -15,17 +15,21 @@ export async function handleHighlightReel(args) {
     await concatClips(args.clips, outputPath, { reencode: true });
     const fileSize = formatFileSize(statSync(outputPath).size);
     const duration = await getVideoDuration(outputPath);
+    const payload = {
+        filePath: outputPath,
+        duration: formatSeconds(duration),
+        durationSeconds: duration,
+        fileSize,
+        clipCount: args.clips.length,
+    };
+    const serialized = JSON.stringify(payload, null, 2);
     return {
+        resultType: 'complete',
         content: [{
                 type: 'text',
-                text: JSON.stringify({
-                    filePath: outputPath,
-                    duration: formatSeconds(duration),
-                    durationSeconds: duration,
-                    fileSize,
-                    clipCount: args.clips.length,
-                }, null, 2),
+                text: serialized,
             }],
+        structuredContent: payload,
     };
 }
 //# sourceMappingURL=highlight-reel.js.map

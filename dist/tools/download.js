@@ -23,11 +23,14 @@ export async function handleDownload(args) {
         outputPath: args.outputPath,
         force: args.force,
     });
+    const serialized = JSON.stringify(result, null, 2);
     return {
+        resultType: 'complete',
         content: [{
                 type: 'text',
-                text: JSON.stringify(result, null, 2),
+                text: serialized,
             }],
+        structuredContent: result,
     };
 }
 //# sourceMappingURL=download.js.map

@@ -16,10 +16,12 @@ interface SearchArgs {
     sortBy?: string;
 }
 export declare function handleSearch(args: SearchArgs): Promise<{
+    resultType: "complete";
     content: {
         type: "text";
         text: string;
     }[];
+    structuredContent: Record<string, unknown>;
 }>;
 export {};
 //# sourceMappingURL=search.d.ts.map

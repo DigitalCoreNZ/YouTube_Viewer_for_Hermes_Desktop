@@ -10,10 +10,12 @@ interface HighlightReelArgs {
     label?: string;
 }
 export declare function handleHighlightReel(args: HighlightReelArgs): Promise<{
+    resultType: "complete";
     content: {
         type: "text";
         text: string;
     }[];
+    structuredContent: Record<string, unknown>;
 }>;
 export {};
 //# sourceMappingURL=highlight-reel.d.ts.map

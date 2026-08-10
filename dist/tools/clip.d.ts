@@ -35,10 +35,12 @@ interface ClipArgs {
     highlightReel?: boolean;
 }
 export declare function handleClip(args: ClipArgs): Promise<{
+    resultType: "complete";
     content: {
         type: "text";
         text: string;
     }[];
+    structuredContent: Record<string, unknown>;
 }>;
 export {};
 //# sourceMappingURL=clip.d.ts.map

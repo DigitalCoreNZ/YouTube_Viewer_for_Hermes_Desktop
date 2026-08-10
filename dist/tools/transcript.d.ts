@@ -17,16 +17,20 @@ interface TranscriptArgs {
     maxSegments?: number;
 }
 export declare function handleTranscript(args: TranscriptArgs): Promise<{
+    resultType: "complete";
     content: {
         type: "text";
         text: string;
     }[];
     isError: boolean;
+    structuredContent: Record<string, unknown>;
 } | {
+    resultType: "complete";
     content: {
         type: "text";
         text: string;
     }[];
+    structuredContent: Record<string, unknown>;
     isError?: undefined;
 }>;
 export {};

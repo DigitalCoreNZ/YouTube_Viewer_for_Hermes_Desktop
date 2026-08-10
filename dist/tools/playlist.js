@@ -11,11 +11,14 @@ export async function handlePlaylist(args) {
     const config = getConfig();
     const limit = args.limit ?? config.playlist.defaultLimit;
     const info = await getPlaylist(args.playlistId, limit);
+    const serialized = JSON.stringify(info, null, 2);
     return {
+        resultType: 'complete',
         content: [{
                 type: 'text',
-                text: JSON.stringify(info, null, 2),
+                text: serialized,
             }],
+        structuredContent: info,
     };
 }
 //# sourceMappingURL=playlist.js.map

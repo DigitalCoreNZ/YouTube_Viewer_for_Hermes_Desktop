@@ -17,10 +17,12 @@ interface DownloadArgs {
     force?: boolean;
 }
 export declare function handleDownload(args: DownloadArgs): Promise<{
+    resultType: "complete";
     content: {
         type: "text";
         text: string;
     }[];
+    structuredContent: Record<string, unknown>;
 }>;
 export {};
 //# sourceMappingURL=download.d.ts.map

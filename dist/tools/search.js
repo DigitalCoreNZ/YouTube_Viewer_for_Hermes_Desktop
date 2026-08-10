@@ -27,11 +27,15 @@ export async function handleSearch(args) {
         duration,
         sortBy,
     });
+    const payload = { results, mode, query: args.query };
+    const serialized = JSON.stringify(payload, null, 2);
     return {
+        resultType: 'complete',
         content: [{
                 type: 'text',
-                text: JSON.stringify({ results, mode, query: args.query }, null, 2),
+                text: serialized,
             }],
+        structuredContent: payload,
     };
 }
 //# sourceMappingURL=search.js.map

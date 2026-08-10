@@ -8,10 +8,12 @@ export declare function handleVideoInfo(args: {
     videoId: string;
     detail?: DetailLevel;
 }): Promise<{
+    resultType: "complete";
     content: {
         type: "text";
         text: string;
     }[];
+    structuredContent: Record<string, unknown>;
 }>;
 export {};
 //# sourceMappingURL=video-info.d.ts.map

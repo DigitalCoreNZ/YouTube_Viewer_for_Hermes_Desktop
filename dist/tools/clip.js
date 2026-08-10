@@ -28,11 +28,14 @@ export async function handleClip(args) {
         force: args.force,
         highlightReel: args.highlightReel,
     });
+    const serialized = JSON.stringify(result, null, 2);
     return {
+        resultType: 'complete',
         content: [{
                 type: 'text',
-                text: JSON.stringify(result, null, 2),
+                text: serialized,
             }],
+        structuredContent: result,
     };
 }
 //# sourceMappingURL=clip.js.map

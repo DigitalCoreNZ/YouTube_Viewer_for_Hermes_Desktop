@@ -33,11 +33,14 @@ export async function handleVideoInfo(args) {
     const info = await getVideoInfo(args.videoId);
     const detail = args.detail ?? 'standard';
     const shaped = shapeResponse(info, detail);
+    const serialized = JSON.stringify(shaped, null, 2);
     return {
+        resultType: 'complete',
         content: [{
                 type: 'text',
-                text: JSON.stringify(shaped, null, 2),
+                text: serialized,
             }],
+        structuredContent: shaped,
     };
 }
 //# sourceMappingURL=video-info.js.map
