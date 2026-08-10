@@ -24,67 +24,78 @@ const server = new McpServer({
   version: pkg.version,
 });
 
+// --- Tool annotations per MCP 2026-07-28 (ToolAnnotations type) ---
+
 const READ_ONLY_ANNOTATIONS = {
   readOnlyHint: true,
   destructiveHint: false,
-  openWorldHint: true,
 } as const;
 
+const DOWNLOAD_ANNOTATIONS = {
+  readOnlyHint: false,
+  destructiveHint: false,
+} as const;
+
+// --- Tool registrations (2026-07-28 spec: title, description, inputSchema, outputSchema, annotations) ---
+
 server.registerTool('youtube_search', {
+  title: 'YouTube Search',
   description: 'Search YouTube for videos, channels, or playlists. Supports filtering by upload date (today/week/month/year), duration (short/medium/long), and sorting (relevance/date/views/rating). Returns results with metadata including title, channel, views, duration, and whether results are personalized.',
   inputSchema: searchInputSchema,
   annotations: READ_ONLY_ANNOTATIONS,
 }, handleSearch);
 
 server.registerTool('youtube_get_transcript', {
+  title: 'Get Transcript',
   description: 'Get the transcript of a YouTube video. Control output size with: "format" — "text" (fullText only, smallest), "segments" (timestamps only), or "both" (default). Use "startTime"/"endTime" (seconds) to grab a specific section (pairs well with chapter timestamps from youtube_get_video_info). Use "maxSegments" to cap output for previewing long videos.',
   inputSchema: transcriptInputSchema,
   annotations: READ_ONLY_ANNOTATIONS,
 }, handleTranscript);
 
 server.registerTool('youtube_get_video_info', {
+  title: 'Get Video Info',
   description: 'Get metadata for a YouTube video. Use "detail" to control response size: "brief" (key stats only — title, channel, views, likes, duration), "standard" (default — most fields, truncated description, chapter count), or "full" (everything including full description, chapters, tags, thumbnail).',
   inputSchema: videoInfoInputSchema,
   annotations: READ_ONLY_ANNOTATIONS,
 }, handleVideoInfo);
 
 server.registerTool('youtube_get_channel_videos', {
+  title: 'Get Channel Videos',
   description: 'List videos from a YouTube channel. Accepts @handle, full URL, or channel ID. Returns videos sorted by newest, popular, or oldest.',
   inputSchema: channelVideosInputSchema,
   annotations: READ_ONLY_ANNOTATIONS,
 }, handleChannelVideos);
 
 server.registerTool('youtube_get_channel_info', {
+  title: 'Get Channel Info',
   description: 'Get metadata for a YouTube channel — name, handle, description, subscriber count, country, and more. Accepts @handle, full URL, or channel ID.',
   inputSchema: channelInfoInputSchema,
   annotations: READ_ONLY_ANNOTATIONS,
 }, handleChannelInfo);
 
 server.registerTool('youtube_get_playlist', {
+  title: 'Get Playlist',
   description: 'Get a YouTube playlist\'s metadata and its videos. Returns title, description, channel, video count, and the list of videos with their positions.',
   inputSchema: playlistInputSchema,
   annotations: READ_ONLY_ANNOTATIONS,
 }, handlePlaylist);
 
-const DOWNLOAD_ANNOTATIONS = {
-  readOnlyHint: false,
-  destructiveHint: false,
-  openWorldHint: true,
-} as const;
-
 server.registerTool('youtube_download', {
+  title: 'Download Video',
   description: 'Download a YouTube video or audio track to a local file. Defaults to 720p quality. Supports quality selection (720p/1080p/best/etc.), download type (video+audio/audio/video), and format. Videos over 30 minutes trigger a confirmation prompt — use force: true to bypass. For video+audio, automatically downloads and muxes separate streams.',
   inputSchema: downloadInputSchema,
   annotations: DOWNLOAD_ANNOTATIONS,
 }, handleDownload);
 
 server.registerTool('youtube_clip', {
+  title: 'Extract Clips',
   description: 'Extract one or more clips from a YouTube video by timestamp. Downloads the source video once at 720p, then cuts each clip. Each clip needs startTime and endTime (seconds, MM:SS, or HH:MM:SS) and an optional label for the filename. Uses fast keyframe-aligned cuts by default — do NOT set accurate: true unless the user explicitly asks for frame-perfect precision (it re-encodes and is much slower). Keep clips tight — 5-10 seconds each, capturing one key moment per clip. When 2+ clips are provided, automatically produces a per-video highlight reel alongside individual clips.',
   inputSchema: clipInputSchema,
   annotations: DOWNLOAD_ANNOTATIONS,
 }, handleClip);
 
 server.registerTool('youtube_highlight_reel', {
+  title: 'Combine Highlight Reel',
   description: 'Combine existing clip files into a single highlight reel. Pass file paths from previous youtube_clip results in your desired playback order. Use this after clipping multiple videos to create one combined reel across all sources. The order of the clips array determines playback order — arrange clips for narrative flow before calling.',
   inputSchema: highlightReelInputSchema,
   annotations: DOWNLOAD_ANNOTATIONS,
