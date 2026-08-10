@@ -1,7 +1,7 @@
 ---
 title: YouTube Viewer for Hermes Desktop
 subtitle: An Agent with Video Watching Abilities
-author: Hermes Agent
+author: Hermes Agent, Brian King
 revnumber: v0.5.1
 doctype: book
 cDay: Monday
@@ -17,12 +17,12 @@ toclevels: 6
 sectnums: true
 sectnumlevels: 6
 icons: font
-keywords: (pending)
-summary: (pending)
-description: (pending)
+keywords: YouTube, MCP, Model Context Protocol, Hermes Desktop, Hermes Agent, video viewer, AI agent, transcript extraction, video download, clip extraction, InnerTube API, cookie authentication, Chrome CDP, yt-dlp, ffmpeg, Node.js
+summary: A Hermes Agent SKILL that bridges the YouTube capability gap for Hermes Desktop — search videos, extract transcripts, browse channels, download content, and clip highlights via MCP (Model Context Protocol). Supports anonymous and personalized modes with Chrome CDP cookie authentication.
+description: A comprehensive documentation and reference for the YouTube Viewer for Hermes Desktop — an MCP server plugin that enables Hermes Agent to search, watch, analyze, download, and clip YouTube content. Covers installation, authentication (anonymous and personalized modes), architecture analysis (InnerTube API, cookie auth via Chrome CDP, yt-dlp/ffmpeg download engine), known failures, and recommended improvements for v0.5.2.
 license: Apache 2.0
 status: Complete
-attributions: Not applicable
+attributions: YouTube for AI Agents by JCodesMore (Apache 2.0), Hermes Agent SKILLS Hub (Nous Research), InnerTube API (youtubei.js), youtube-transcript-plus, ytdlp-nodejs / yt-dlp, ffmpeg-static / ffmpeg, Puppeteer-core / Chrome DevTools Protocol, @modelcontextprotocol/sdk, arXiv
 copyright: © Copyright 2020-2026 DigitalCoreNZ. All rights reserved.
 ---
 
@@ -34,13 +34,29 @@ copyright: © Copyright 2020-2026 DigitalCoreNZ. All rights reserved.
 
 ## Purpose
 
-Hermes Desktop is my desktop AI companion. It is incredibly capable at text-based tasks — writing code, answering questions, generating images via ComfyUI, browsing the web — but it has one glaring blind spot: **it cannot see YouTube videos**.
+Hermes Desktop is my desktop AI companion. It is incredibly capable at text-based tasks — writing code, answering questions, generating images via ComfyUI, browsing the web — but it has one glaring blind spot:
 
-When I ask Hermes Desktop to "watch this video and tell me what it says" or "find the best tutorial on X", it hits a wall. The **[Hermes Agent SKILLS Hub](https://hermes-agent.nousresearch.com/docs/skills/)** does not include a video viewing option at this time. There is no built-in ability to search YouTube, fetch transcripts, get video metadata, download clips, or browse channels.
+> **Hermes Desktop cannot see YouTube videos**.
 
-This utility solves that problem. It is a **Hermes Agent skill** — a procedural memory that Hermes Agent loads and follows — combined with a lightweight backend script that handles the heavy lifting: searching YouTube's API, extracting transcripts, downloading videos, and authenticating via Chrome's cookie extraction.
+When I ask Hermes Desktop to "watch X video and transcribe what is said in English" or "copy the diagram that is displayed at Y time", it hits a wall. The **[Hermes Agent SKILLS Hub](https://hermes-agent.nousresearch.com/docs/skills/)** does not include a video viewing option at this time. There are very limited abilities with regards to YouTube, which is the second most used search engine in the world.
 
-The skill installs in minutes and works immediately in **anonymous mode** (general search results, no login required). For **personalized mode** (results tailored to your YouTube account), the authentication process involves a Chrome session and an email verification — I document this flow step-by-step below.
+As my primary research tool (with arXiv following a close second), my needs as the founder of a recent (April, 2026) tech startup are severely curtailed by an inability to automate CRON jobs that:
+
+* Search for explainer videos that have been released in the last 24-hours for recently released research papers on arXiv,
+* Arrange the content my Playlists into categories based on the transcripts of those videos, and
+* Arrange, every 24-hours, the Playlists themselves so that the latest additions appear at the top of the list and older entries are arranged in descending order.
+
+This utility solves these, and other, problems. It is a **Hermes Agent SKILL** for **Hermes Desktop**, a procedural memory that Hermes Agent loads and follows, that provides a lightweight backend script to handle the heavy lifting: searches using YouTube's API, extracting and creating transcripts, downloading videos, and authenticating via Chrome's cookie extraction.
+
+The skill installs in minutes and works immediately in **anonymous mode** (general search results, no login required). For **personalized mode** (results tailored to my YouTube account), the authentication process involves a Chrome session and an email verification — I document this flow step-by-step below.
+
+Early in development, I ask DuckDuckGo to find an open-source GitHub solution to my issues. In return, it points me to the **[YouTube for AI Agents](https://github.com/JCodesMore/youtube-for-ai-agents)** project, that applies the Apache 2.0 license. To remain consistent, _this_ project uses the same, permissive licence.
+
+My process, in essence, uses the following steps:
+
+* Clone the `YouTube for AI Agents` repo to my local PC,
+* Create my own repo called [YouTube Viewer for Hermes Desktop](https://github.com/DigitalCoreNZ/YouTube_Viewer_for_Hermes_Desktop), and
+* Have `Hermes Agent` reverse engineer `YouTube for AI Agents` and create a version that can be used by `Hermes Desktop`.
 
 ---
 
@@ -58,69 +74,96 @@ The skill installs in minutes and works immediately in **anonymous mode** (gener
 
 ### Step 1 — Clone the Repository
 
+* In the terminal, change to an installation directory, e.g. Downloads:
+
 ```bash
-git clone https://github.com/<your-org>/YouTube_Viewer_for_Hermes_Desktop.git \
-  /media/brian/Apps/01_lena_v0.5.0/GitHub/Downloads/YouTube_Viewer_for_Hermes_Desktop
+cd ~/Downloads
 ```
+
+* Clone this Repo:
+
+```bash
+git clone https://github.com/DigitalCoreNZ/YouTube_Viewer_for_Hermes_Desktop.git
+```
+
+==NOTE: The result is the `~/Downloads/YouTube_Viewer_for_Hermes_Desktop` filepath. I can use any directory, as long as the paths for the following directions are adjusted accordingly. I can even clone the repo into an existing directory by using the `git clone https://github.com/DigitalCoreNZ/YouTube_Viewer_for_Hermes_Desktop.git .` command. The space, and especially the period, at the end of the command specifically tells git that the repo should clone into _this_ directory and _not_ into a sub-directory (as was _purposely_ done in the example above.)==
 
 ### Step 2 — Install Dependencies
 
-The utility uses `youtubei.js` for YouTube API access, `youtube-transcript-plus` for transcripts, `ytdlp-nodejs` for downloading, and `ffmpeg-static` for clipping. Install them:
+The utility uses `youtubei.js` for YouTube API access, `youtube-transcript-plus` for transcripts, `ytdlp-nodejs` for downloading, and `ffmpeg-static` for clipping.
+
+* I install the requirements:
 
 ```bash
-cd /media/brian/Apps/01_lena_v0.5.0/GitHub/Downloads/YouTube_Viewer_for_Hermes_Desktop
-npm install
+cd ~/Downloads/YouTube_Viewer_for_Hermes_Desktop
+npm install youtubei.js youtube-transcript-plus ytdlp-nodejs ffmpeg-static
 ```
 
-This installs all required packages and post-install scripts that download the yt-dlp and ffmpeg binaries automatically.
+==NOTE: This installs all of the required packages, and post-install scripts, that automatically download the yt-dlp and ffmpeg binaries.==
 
 ### Step 3 — Load the Skill into Hermes Agent
 
-The skill file lives at `skills/youtube-viewer/SKILL.md`. Hermes Agent loads skills from its skills directory. To register this skill, run:
+The skill file lives at `~/Downloads/YouTube_Viewer_for_Hermes_Desktop/skills/youtube-viewer/SKILL.md`. Hermes Agent loads a SKILL from its SKILLS directory.
+
+* I run the following command to register the Hermes Agent SKILL:
 
 ```bash
 hermes skills add \
-  --path /media/brian/Apps/01_lena_v0.5.0/GitHub/Downloads/YouTube_Viewer_for_Hermes_Desktop/skills/youtube-viewer/SKILL.md \
-  --name youtube-viewer
+  --path ~/Downloads/YouTube_Viewer_for_Hermes_Desktop/skills/youtube-viewer/SKILL.md \
+  --name /yt
 ```
 
-Or, if your Hermes Agent config supports it, symlink the skill into the skills directory:
+Or, if my Hermes Agent config supports it, I can (-s)ymlink (symbolic link) the SKILL into the SKILLS directory:
 
 ```bash
 ln -s \
-  /media/brian/Apps/01_lena_v0.5.0/GitHub/Downloads/YouTube_Viewer_for_Hermes_Desktop/skills/youtube-viewer \
+  ~/Downloads/YouTube_Viewer_for_Hermes_Desktop/skills/youtube-viewer \
   ~/.hermes/skills/youtube-viewer
 ```
 
-Then restart your Hermes Agent session. The skill is now active.
+==NOTE: This option has the added benefits of (1 of 2) making any changes to the `youtube-viewer` SKILL, within the repo, automatically reflect into Hermes Agent, and (2 of 2) having a single source of truth within the repo, rather than making a copy of the SKILL that is then saved to the `~/.hermes/skills` directory before applying the copy to Hermes Agent, is a superior solution. A symlink does away with constantly synchronising the repo version and the copied version of the `youtube-viewer` SKILL whenever a change is made.==
+
+* I restart my Hermes Agent session (and, in my case, the DwafStar V4 harness). The skill is now active.
 
 ### Step 4 — Start the MCP Server (for Desktop integration)
 
-Hermes Desktop can connect to the MCP (Model Context Protocol) server that exposes YouTube tools. Start it:
+Hermes Desktop can connect to the MCP (Model Context Protocol) server that exposes YouTube tools.
+
+* I start the MCP server by running the following command:
 
 ```bash
-node /media/brian/Apps/01_lena_v0.5.0/GitHub/Downloads/YouTube_Viewer_for_Hermes_Desktop/dist/index.js
+node ~/Downloads/YouTube_Viewer_for_Hermes_Desktop/dist/index.js
 ```
 
-Or run it as a background process via Hermes Agent's terminal:
+* I can also run the MCP server as a background process:
 
 ```bash
-node /media/brian/Apps/01_lena_v0.5.0/GitHub/Downloads/YouTube_Viewer_for_Hermes_Desktop/dist/index.js &
+node ~/Downloads/YouTube_Viewer_for_Hermes_Desktop/dist/index.js &
 ```
 
-For persistent integration, configure Hermes Desktop's MCP settings to point to this server (see Hermes Desktop documentation for the specific config path).
+* I run Hermes Desktop:
+
+```bash
+hermes desktop
+```
+
+* Once running, I configure the MCP settings within Hermes Desktop to point to the MCP server.
 
 ### Step 5 — Verify the Installation
 
-Ask Hermes Agent:
+* Add the following prompt to Hermes Desktop:
 
-> "Search YouTube for videos about MCP protocol"
+> "Search YouTube for 3 videos about the MCP 2026-07-28 protocol"
 
-The agent should respond with YouTube search results. Try:
+==Hermes Desktop should respond with three (3) YouTube search results.==
+
+* Add the following prompt to Hermes Desktop:
 
 > "Get the transcript of video dQw4w9WgXcQ"
 
-This should return the transcript of a known video. If both work, installation is successful.
+==Hermes Desktop should return the transcript of a known video.==
+
+==I have a successful installation if both prompts provide the results I expect.==
 
 ---
 
@@ -433,21 +476,23 @@ The next version (v0.5.2) should prioritize adding visual analysis by integratin
 
 ---
 
-## Document Details: Title (pending, from frontmatter metadata)
+## Document Details
 
-**Document Subtitle:** (pending, from frontmatter metadata)
+**Document Title:** YouTube Viewer for Hermes Desktop
 
-**Document Version:** (pending, from frontmatter metadata)
+**Document Subtitle:** An Agent with Video Watching Abilities
 
-**Document Author(s):** (pending, from frontmatter metadata)
+**Document Version:** v0.5.1
 
-**Document Attributions:** (pending, from frontmatter metadata)
+**Document Author(s):** Hermes Agent, Brian King
 
-**Document Creation Date:** (pending, from frontmatter metadata)
+**Document Attributions:** YouTube for AI Agents by JCodesMore (Apache 2.0), Hermes Agent SKILLS Hub (Nous Research), InnerTube API (youtubei.js), youtube-transcript-plus, ytdlp-nodejs / yt-dlp, ffmpeg-static / ffmpeg, Puppeteer-core / Chrome DevTools Protocol, @modelcontextprotocol/sdk, arXiv
 
-**Last Update:** (pending, from frontmatter metadata)
+**Document Creation Date:** Monday, 10 August 2026
 
-**License:** (pending, from frontmatter metadata)
+**Last Update:** Monday, 10 August 2026
+
+**License:** Apache 2.0
 
 © Copyright 2020-2026 DigitalCoreNZ. All rights reserved.
 <br>
